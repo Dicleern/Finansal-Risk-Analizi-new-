@@ -1,0 +1,1 @@
+select * from {{ source('Finansal_analiz_raw', 'transaction_data') }}
