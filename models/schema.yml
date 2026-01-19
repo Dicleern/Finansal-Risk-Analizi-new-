@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: Finansal_analiz_raw
+    database: linen-momentum-476714-g4
+    schema: Finansal_analiz
+    tables:
+      - name: card_data
+      - name: mcc_codes
+      - name: transaction_data
+      - name: users_data
+      
