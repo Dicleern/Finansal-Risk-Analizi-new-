@@ -1,6 +1,6 @@
 /*
 Model: int_transaction_leftjoin
-Purpose: To combine Transaction, User, Card, and Sector (MCC) data into a single 'Master Table'.
+Purpose: To combine Transaction, User, Card, Sector and Coordinate data into a single 'Master Table'.
 Author: Elif
 Note: This table forms the basis of Geographic Analysis and Fraud Detection models. */
 
@@ -17,6 +17,9 @@ WITH
 -- extracting the explanations of the sector codes.
 , mcc AS ( SELECT * FROM {{ ref('stg_mcc') }})
 
+, zip_codes AS ( SELECT * FROM {{ ref('stg_zip_codes') }})
+
+
 SELECT
     
     -- t is an abbreviation for transactions table.
@@ -29,6 +32,10 @@ SELECT
     , t.merchant_city
     , t.merchant_state
     , t.merchant_zip   
+
+    -- z is an abbreviation for zip_codes table.
+    , z.latitude AS merchant_lat
+    , z.longitude AS merchant_lon
 
     -- c is an abbreviation for cards table.
     , c.card_id
@@ -61,3 +68,7 @@ FROM transactions as t
 LEFT JOIN users as u ON t.client_id = u.user_id
 LEFT JOIN cards as c ON t.card_id = c.card_id
 LEFT JOIN mcc as m ON t.mcc = m.mcc_code
+/* I handled the data type mismatch here. Transaction zip codes were in FLOAT 
+   format (e.g., 34000.0), so I cast both sides to INT64 to remove decimal 
+   places and ensure a clean join with the reference table.*/
+LEFT JOIN zip_codes z ON CAST(t.merchant_zip AS INT64) = z.zip_code

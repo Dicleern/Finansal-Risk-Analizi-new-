@@ -9,3 +9,4 @@ sources:
       - name: transaction_data
       - name: card_data
       - name: mcc_codes
+      - name: zip_code_public
