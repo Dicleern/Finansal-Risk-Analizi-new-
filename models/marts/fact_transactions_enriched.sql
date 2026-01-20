@@ -3,6 +3,8 @@
     Author: Elif
 */
 
+{{ config(materialized='table') }}
+
 WITH master_table AS ( SELECT * FROM {{ ref('int_transaction_leftjoin') }} )
 
 SELECT

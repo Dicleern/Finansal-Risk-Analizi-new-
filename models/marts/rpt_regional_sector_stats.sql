@@ -2,7 +2,7 @@
     Purpose: I designed this reporting model to aggregate transaction metrics by city and sector.
     Author: Elif
 */
-
+{{ config(materialized='table') }}
 WITH enriched_data AS (
     -- I am pulling data from my enhanced fact table where I previously added distance and channel logic.
     SELECT * FROM {{ ref('fact_transactions_enriched') }})
