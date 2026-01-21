@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_financial_risk_metrics
+    description: "Müşteri bazlı finansal risk ve limit kullanım metriklerini içeren tablo."
+    columns:
+      - name: user_id
+        description: "Müşterinin benzersiz kimlik numarası."
+        tests:
+          - unique
+          - not_null
+      - name: limit_utilization_rate
+        description: "Müşterinin toplam kredi limitinin harcamaya oranı."
+        tests:
+          - not_null  # Sadece boş değer olup olmadığını kontrol eder
