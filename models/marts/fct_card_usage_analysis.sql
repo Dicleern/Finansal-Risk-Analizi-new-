@@ -8,7 +8,6 @@ select
         partition by client_id 
         order by kullanim_sayisi desc
     ) as kullanim_sirasi,
-    date_diff(current_date(), son_islem_tarihi, day) as kac_gundur_pasif,
     date_diff(son_kullanma_tarihi, son_islem_tarihi, day) as son_islem_ve_expiry_farki_gun,
     case 
         when date_diff(son_kullanma_tarihi, son_islem_tarihi, day) <= 60 then 1 
