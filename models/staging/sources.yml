@@ -3,10 +3,17 @@ version: 2
 sources:
   - name: finansal_analiz
     database: linen-momentum-476714-g4
-    schema: Finansal_analiz 
+    schema: Finansal_analiz
     tables:
       - name: users_data
       - name: transaction_data
       - name: card_data
       - name: mcc_codes
-      - name: zip_code_public
+
+      
+  - name: zip_code_final
+    database: linen-momentum-476714-g4
+    schema: dash_elif_eu
+    tables:
+      - name: zipcode_area
+

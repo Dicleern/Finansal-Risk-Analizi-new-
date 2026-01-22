@@ -68,7 +68,8 @@ FROM transactions as t
 LEFT JOIN users as u ON t.client_id = u.user_id
 LEFT JOIN cards as c ON t.card_id = c.card_id
 LEFT JOIN mcc as m ON t.mcc = m.mcc_code
-/* I handled the data type mismatch here. Transaction zip codes were in FLOAT 
-   format (e.g., 34000.0), so I cast both sides to INT64 to remove decimal 
-   places and ensure a clean join with the reference table.*/
-LEFT JOIN zip_codes z ON CAST(t.merchant_zip AS INT64) = z.zip_code
+/* I am joining the zip_codes table by standardizing the merchant_zip column. 
+First, I convert the zip code to an integer and then back to a string to remove any formatting inconsistencies. 
+Finally, I use LPAD to add leading zeros, 
+ensuring that every zip code is exactly 5 digits long before matching it to z.zip_code.*/
+LEFT JOIN zip_codes z ON LPAD(SAFE_CAST(SAFE_CAST(t.merchant_zip AS INT64) AS STRING), 5, '0') = z.zip_code

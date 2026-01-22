@@ -33,5 +33,3 @@ SELECT
     , errors
 
 FROM master_table
--- I only included those with filled coordinates to avoid errors.
-WHERE user_home_lat IS NOT NULL AND merchant_lat IS NOT NULL
