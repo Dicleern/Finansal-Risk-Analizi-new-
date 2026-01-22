@@ -24,7 +24,11 @@ SELECT
     , ST_DISTANCE(
         ST_GEOGPOINT(user_home_lon, user_home_lat), 
         ST_GEOGPOINT(merchant_lon, merchant_lat)) / 1000 AS distance_km
-    
+
+    , user_home_lon
+    , user_home_lat
+    , merchant_lon
+    , merchant_lat
     , merchant_city
     , merchant_state
     , category_name 
