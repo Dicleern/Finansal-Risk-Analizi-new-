@@ -9,4 +9,6 @@ sources:
       - name: mcc_codes
       - name: transaction_data
       - name: users_data
+      - name: errors_is_not_null
+      
       
