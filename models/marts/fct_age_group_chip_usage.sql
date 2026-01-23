@@ -33,7 +33,13 @@ age_segmentation AS (
 SELECT 
     age_group,
     use_chip,
-    COUNT(*) AS total_transactions
+    COUNT(*) AS total_transactions,
+    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY age_group), 2) AS percentage_share
 FROM age_segmentation
 GROUP BY 1, 2
 ORDER BY age_group, total_transactions DESC
+
+-- yaş gruplarını 5 gruba ayırdım 
+-- gurplara göre use chip işlemlerini inceledim total transactionı hesapladım 
+-- her grup için işlem başına ayrıyetten hesaplama yaptım 
+
