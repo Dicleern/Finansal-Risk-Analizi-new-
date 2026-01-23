@@ -1,0 +1,1 @@
+select * from {{ source('Finansal_analiz_raw', 'errors_is_not_null') }}
