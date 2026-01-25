@@ -34,6 +34,11 @@ SELECT
     , amount
     , card_on_dark_web
     , errors
+    , gender
+    , current_age
+    , user_state_name
+    , users_state 
+    , credit_score
 
     /* To enhance the clarity of our analysis, 
     I consolidated the 108 specific categories from the fact table into broader, 
@@ -45,7 +50,7 @@ SELECT
             'Family Clothing Stores', 
             'Book Stores', 
             'Artist Supply Stores, Craft Shops', 
-            'Womens Ready-To-Wear Stores', 
+            "Women's Ready-To-Wear Stores", 
             'Cosmetic Stores', 
             'Electronics Stores', 
             'Computers, Computer Peripheral Equipment', 

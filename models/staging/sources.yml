@@ -16,4 +16,10 @@ sources:
     schema: dash_elif_eu
     tables:
       - name: zipcode_area
+    
+  - name: user_location
+    database: linen-momentum-476714-g4
+    schema: user_location_eu
+    tables:
+      - name: users_location
 

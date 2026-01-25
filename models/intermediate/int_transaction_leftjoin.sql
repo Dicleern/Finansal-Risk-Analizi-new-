@@ -9,7 +9,7 @@ WITH
   transactions AS ( SELECT * FROM {{ ref('stg_transactions') }}) 
 
 -- extracting user demographic and financial data.
-, users AS ( SELECT * FROM {{ ref('stg_users') }}) 
+, users AS ( SELECT * FROM {{ ref('int_user_location') }}) 
 
 -- retrieving card security and limit information.
 , cards AS ( SELECT * FROM {{ ref('stg_cards') }})
@@ -18,6 +18,8 @@ WITH
 , mcc AS ( SELECT * FROM {{ ref('stg_mcc') }})
 
 , zip_codes AS ( SELECT * FROM {{ ref('stg_zip_codes') }})
+
+, user_location AS ( SELECT * FROM {{ ref('stg_users_location')}})
 
 
 SELECT
@@ -58,6 +60,9 @@ SELECT
     , u.per_capita_income     
     , u.latitude AS user_home_lat
     , u.longitude AS user_home_lon
+    , u.users_state 
+    , u.state_name AS user_state_name
+    , u.address
     
     -- m is an abbreviation for  mcc table.
     , m.category_name         

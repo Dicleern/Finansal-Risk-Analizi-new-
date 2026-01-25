@@ -13,6 +13,8 @@ SELECT
     , merchant_city
     , category_name
     , general_group
+    , users_state 
+    , user_state_name
 
     -- I calculated the total count and volume to identify the most active sectors in each region.
     , COUNT(transaction_id) as total_transactions
@@ -35,3 +37,5 @@ GROUP BY   merchant_state
          , merchant_city
          , category_name
          , general_group
+         , users_state 
+         , user_state_name
