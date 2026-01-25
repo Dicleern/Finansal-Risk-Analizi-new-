@@ -17,10 +17,28 @@ WITH
 -- extracting the explanations of the sector codes.
 , mcc AS ( SELECT * FROM {{ ref('stg_mcc') }})
 
+--I retrieved the data from a BigQuery public dataset.
 , zip_codes AS ( SELECT * FROM {{ ref('stg_zip_codes') }})
 
+--I retrieved the data from a BigQuery public dataset.
 , user_location AS ( SELECT * FROM {{ ref('stg_users_location')}})
 
+-- There were 189 missing country-city combinations. 
+--I queried them using BigQuery and saved the results as a CSV file. 
+--Then, I used AI assistance to match these points with location information.
+, location_lookup AS ( SELECT 
+          merchant_city 
+        , merchant_state 
+        , SAFE_CAST(latitude AS FLOAT64) as latitude
+        , SAFE_CAST(longitude AS FLOAT64) as longitude FROM {{ ref('merchant_locations') }})
+
+-- I obtained this dataset from https://simplemaps.com/data/us-cities.
+, us_city_lookup AS ( SELECT 
+        LOWER(TRIM(city)) as join_city,
+        TRIM(state_id) as join_state_code,
+        SAFE_CAST(lat AS FLOAT64) as us_latitude,
+        SAFE_CAST(lng AS FLOAT64) as us_longitude,
+        `population` FROM {{ ref('uscities') }})
 
 SELECT
     
@@ -35,9 +53,18 @@ SELECT
     , t.merchant_state
     , t.merchant_zip   
 
-    -- z is an abbreviation for zip_codes table.
-    , z.latitude AS merchant_lat
-    , z.longitude AS merchant_lon
+    -- 1st priority: The exact coordinates from the Zip Code table.
+    -- 2nd priority: If that is not available, the city center coordinates from the Seed table.
+    -- 3rd priority : Look for mismatched zip codes by state and city.
+, COALESCE(
+          SAFE_CAST(z.latitude AS FLOAT64) 
+        , loc.latitude 
+        , us.us_latitude) AS merchant_lat
+      
+    , COALESCE(
+          SAFE_CAST(z.longitude AS FLOAT64)
+        , loc.longitude
+        , us.us_longitude) AS merchant_lon
 
     -- c is an abbreviation for cards table.
     , c.card_id
@@ -78,3 +105,17 @@ First, I convert the zip code to an integer and then back to a string to remove 
 Finally, I use LPAD to add leading zeros, 
 ensuring that every zip code is exactly 5 digits long before matching it to z.zip_code.*/
 LEFT JOIN zip_codes z ON LPAD(SAFE_CAST(SAFE_CAST(t.merchant_zip AS INT64) AS STRING), 5, '0') = z.zip_code
+    
+
+-- I linked the tables according to city and country names.
+LEFT JOIN location_lookup loc
+    ON LOWER(TRIM(t.merchant_city)) = LOWER(TRIM(loc.merchant_city)) 
+    AND LOWER(TRIM(t.merchant_state)) = LOWER(TRIM(loc.merchant_state))
+
+/*I downloaded a comprehensive dataset for the states with mismatched zip codes and performed 
+a city-by-state match. I managed to reduce the missing 1.7 billion data points to 12,000.*/
+LEFT JOIN us_city_lookup us
+    ON LOWER(TRIM(t.merchant_city)) = us.join_city
+    AND TRIM(t.merchant_state) = us.join_state_code
+
+
