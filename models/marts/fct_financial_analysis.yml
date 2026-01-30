@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: fct_financial_analysis
+    description: Transaction-level fact table enriched with customer, card, and MCC data
+
+    columns:
+      - name: transaction_id
+        description: Unique identifier for each transaction
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        description: Customer identifier
+        tests:
+          - not_null

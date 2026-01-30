@@ -1,0 +1,1 @@
+SELECT * FROM {{ source('finans_kaynaklari', 'transaction_data') }}

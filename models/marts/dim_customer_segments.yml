@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: dim_customer_segments
+    description: Customer-level dimension table used for segmentation and behavioral analysis
+
+    columns:
+      - name: user_id
+        description: Unique customer identifier
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_segment
+        description: Business-defined customer segment label
+        tests:
+          - not_null

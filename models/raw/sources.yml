@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: finans_kaynaklari
+    project: linen-momentum-476714-g4
+    dataset: Finansal_analiz
+    tables:
+      - name: transaction_data
+      - name: users_data
+      - name: card_data
+      - name: mcc_codes
